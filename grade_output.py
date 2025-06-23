@@ -1,3 +1,4 @@
+import os
 from page_init import init_page
 from playwright.sync_api import BrowserContext
 
@@ -13,8 +14,11 @@ def grade_output(ctx: BrowserContext, href: str, course_name: str) -> None:
         course_page.locator("a.operation").first.click()
 
     download = download_info.value
-    # 保存文件并指定文件名
-    download.save_as(f"./grade/{course_name}.xlsx")  # 明确指定文件名和扩展名
+    # 保存文件前确保目录存在
+    save_dir = "./成绩表"
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
+    download.save_as(f"{save_dir}/{course_name}.xlsx")  # 明确指定文件名和扩展名
 
     print(f"成绩已保存: {course_name}.xlsx")
     course_page.close()
